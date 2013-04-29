@@ -1,0 +1,14 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false"
+		android:drawable="@drawable/toggle_disabled"
+    />
+    <item android:state_pressed="true"
+        android:drawable="@drawable/toggle_pressed"
+    />
+    <item android:state_checked="true" 
+        android:drawable="@drawable/toggle_checked"
+    />
+    <item 
+    	android:drawable="@drawable/toggle_default"
+    />
+</selector>

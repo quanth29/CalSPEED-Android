@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+   xmlns:android="http://schemas.android.com/apk/res/android">
+   <!-- 
+   <CheckBoxPreference
+      android:key="run_glasnost"
+      android:title="@string/run_glasnost_title"
+      android:summary="@string/run_glasnost_summary"
+      android:defaultValue="false" />
+      -->
+   <CheckBoxPreference
+      android:key="GPSoverride"
+      android:title="@string/GPSoverride_title"
+      android:summary="@string/GPSoverride_summary"
+      android:defaultValue="false" />
+</PreferenceScreen>

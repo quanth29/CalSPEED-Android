@@ -1,0 +1,17 @@
+
+.settings/org.eclipse.jdt.core.prefs
+.metadata/*
+bin/*
+assets/id_rsa_old
+assets/iperfT100311
+AndroidManifest.xml.orig
+
+lint.xml
+lint.xml
+.settings/org.eclipse.ltk.core.refactoring.prefs
+
+lint.xml
+
+res/layout/main_new.xml
+res/layout/main_old.xml
+.DS_Store

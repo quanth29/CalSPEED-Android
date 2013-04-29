@@ -1,0 +1,16 @@
+CalSPEED Android App
+Copyright 2013, California State University Monterey Bay (CSUMB).
+
+This product includes software developed at The California State University
+Monterey Bay (CSUMB). See also the file LICENSE.txt.
+The purpose of this NOTICE.txt file is to contain notices that may be
+required by the copyright owner and their license.
+
+This product includes software developed for the Network Diagnostic Tool (NDT)
+http://code.google.com/p/ndt/
+
+This product includes software developed by the NLANR/DAST
+http://sourceforge.net/projects/iperf/
+
+This product includes software developed by the JCraft, Inc.
+http://www.jcraft.com/jsch/

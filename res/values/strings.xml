@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="official">CPUC Tester Beta v2.0</string>
+    <string name="nonofficial">Crowd Source Android Phone v1.0</string>
+    <string name="app_name">CalSPEED</string>
+    <string name="exit">Exit</string>
+    <string name="about">About</string>
+    <string name ="about_title">About</string>
+    <string name="about_label">About</string>
+    <string name="about_text"><p><b><u>\nAbout CalSPEED\n</u></b></p>
+        <p>\nCalSPEED, released by the California Public Utilities Commission (CPUC), empowers end-users with a professional-level, industry-standard testing tool to measure the quality and speed of their mobile data connection. CalSPEED conducts a two-phase test of an initial test and a second validation test in order to ensure statistically significant measurements. The test captures upload speed, download speed, message delay (latency), and message delay variation (jitter). The first two metrics measure broadband throughput, while the second two measure the streaming quality of your mobile broadband connection. The results are uploaded to a public repository at the CPUC to provide you with the ability to compare broadband coverage and performance at your location with that in other areas of California.\n</p>
+        <p>\nThe test results may vary based on factors such as location, end-user hardware, network congestion, and time of day. If you receive a results ‘Incomplete’ message, it is because one of these factors has hindered the collection of valid results. Please try running the test again.\n</p>
+        <p><u>\nPlease note that, depending on the network connection, tests in CalSPEED may use a lot of data capacity. As with any mobile application, monitor your usage relative to your particular data plan. The CPUC does not assume any responsibility for charges incurred while running CalSPEED.\n</u></p>
+        <p><b>\n\nAbout the CPUC\n</b></p>
+        <p>\nThe California Public Utilities Commission (CPUC) is the California recipient of an $8,000,000 State Broadband Data and Development Grant, awarded by the National Telecommunications and Information
+Administration (NTIA) under the American Recovery and Reinvestment Act (ARRA). A portion of this Grant funds the development, maintenance, and operation of CalSPEED.\n</p>
+<p>\nCalSPEED is developed by California State University, Monterey Bay\'s Computer Science and Information Technology Program.\n</p>
+<p>\nContact: calspeed@cpuc.ca.gov\n</p>
+        </string>
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="privacy_text"><p><b><u>\n\t\t\t\t\t\t\t\tPrivacy Policy\n\n</u></b></p>
+        The California Public Utilities Commission (CPUC) is the California recipient of an $8,000,000 State Broadband Data and Development Grant, awarded by the National Telecommunications and Information Administration (NTIA) under the American Recovery and Reinvestment Act (“ARRA”). The Grant funds certain broadband mapping and planning projects through October, 2014.  A portion of approximately $1,500,000 of the total grant is for the creation of a mobile app that can be used by the public to measure and report actual mobile broadband connection quality. The CPUC contracted with California State University, Monterey Bay (CSUMB) to develop an open source testing application that collects mobile broadband measurements in real-world conditions. \n
+        The CPUC Mobile Testing Application (Beta) will provide Californians with additional information about their mobile broadband connection and to build awareness about the importance of mobile broadband coverage in accessing information and services from the internet. As a part of this collection, the CPUC and CSUMB will collect and store Service Set Identifiers (SSID), Basic Service Set Identifiers (BSSID), and GPS coordinates.  All of this information will be available to the public. \n\n
+        An SSID is the name of a wireless local area network (WLAN). The SSID differentiates one WLAN from another. It is also a unique identifier that is attached to the header of packets sent over the wireless local area network. An SSID can be associated with multiple access points or devices.  In contrast, BSSID is unique to the access point and does not transfer between multiple access points.\n\n
+        This privacy policy is effective March 22,2013. Users who have downloaded this app will be notified of any changes through the App.  \n\n
+        California Bus. And Prof. Code §§22575 -22579, Gov. Code § 11019.9\n
+    </string>
+    <string name="standardTest">Start Test</string>
+
+    <string name="fail_tip">Test failed.</string>  
+    <string name="test_begins_at">Testing started at %1$s</string>
+    <string name="test_interrupted_at"> interrupted at %1$s</string>
+    <string name="from_header">From:</string>
+    <string name="to_header">To:</string>
+
+    <string name="server_indicator">Server: %1$s</string>
+    <string name="host_indicator">Host: %1$s</string>
+    <string name="no_GPS_info">No GPS signal. %1$s</string>
+    <string name="latitude_result">Latitude: %1$f</string>
+    <string name="longitude_result">Longitude: %1$f</string>
+    <string name="version_indicator">Version: %1$s</string>
+    <string name="default_server_indicator">Default server: %1$s</string>
+    <string name="network_type_indicator">NetworkType: %1$s</string>
+    <string name="network_provider">NetworkProvider: %1$s</string>
+    <string name="network_operator">NetworkOperator: %1$s</string>
+    <string name="connection_type">ConnectionType: %1$s</string>
+    <string name="changed_server">Changed testing server to: %1$s</string>
+    <string name="os_line">OS: Name = %1$s, Architecture = %2$s, Version = %3$s</string>
+    <string name="java_line">Java: Version = %1$s, Vendor = %2$s</string>
+    <string name="email_title">CPUC Mobile Client for Android Result on %1$s</string>
+    <string name="intent_error">Statistics Activity Intent Error.</string>
+    <string name="test_again">---------End of Test-------</string>
+    
+
+<?menu preferences ?>
+
+	<string name="GPSoverride_title">GPS Override</string>
+	<string name="GPSoverride_summary">Disable checking for valid GPS (Latitude/Longitude) readings.</string>
+
+	<string name="headerDescription">Application Header Image</string>	
+
+	<string name="Indoor">Indoor</string>	
+	<string name="Outdoor">Outdoor</string>
+
+	<string name="uploadLabel">Upload Speed</string>
+	<string name="downloadLabel">Download Speed</string>	
+	<string name="latencyLabel">Delay</string>
+	<string name="jitterLabel">Delay Variation</string>
+	<string name="kilobytespersecond">kb/s</string>
+	<string name="miliseconds">ms</string>
+	<string name="testAgain">"Test Again"</string>
+	<string name="defaultValue">0</string>
+</resources>
