@@ -483,7 +483,8 @@ public class Calspeed extends Activity {
 		stringBuilder = new StringBuilder().append("\n")
 
 		.append(getSystemProperty()).append("\n").append(mobileInfo)
-				.append("\n\n");
+				.append("\n\n")
+				.append("\n").append(telephoneInfo).append("\n");
 
 
 
