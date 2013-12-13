@@ -5,7 +5,15 @@
     <dimen name="unitsWidth">35dp</dimen>
     <dimen name="standardPadding">5dp</dimen>
     <dimen name="adjustmentPadding">2.5dp</dimen>
-    <dimen name="numResultsSize">30dp</dimen>
+    <dimen name="numResultsSize">25dp</dimen>
     <dimen name="resultsLabelSize">20dp</dimen>
     <dimen name="resultsHeight">40dp</dimen>
+    <dimen name="buttonWidth">130dp</dimen>
+    <dimen name="buttonHeight">180dp</dimen>
+    
+    <dimen name="headerDateWidth">60dp</dimen>
+    <dimen name="headerUpWidth">70dp</dimen>
+    <dimen name="headerDownWidth">70dp</dimen>
+    <dimen name="headerDelayWidth">60dp</dimen>
+    <dimen name="headerDelayVarWidth">60dp</dimen>
 </resources>

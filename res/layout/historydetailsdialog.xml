@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+	  	    android:id="@+id/DateHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+
+	
+	            <TextView
+	                android:id="@+id/DateHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/dateLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/DateHistoryValue"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.08"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+
+	
+	        </LinearLayout>  
+	   <LinearLayout
+	  	    android:id="@+id/TimeHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+
+	
+	            <TextView
+	                android:id="@+id/TimeHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/timeLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/TimeHistoryValue"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.08"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+
+	
+	        </LinearLayout>  
+	              
+
+	  	 <LinearLayout
+	  	    android:id="@+id/uploadHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+	
+
+	
+	            <TextView
+	                android:id="@+id/uploadHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/uploadLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/uploadHistorySpeed"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+	            <TextView
+	                android:id="@+id/uploadUnits"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="bottom"
+	                android:gravity="bottom"
+	                android:paddingBottom="@dimen/adjustmentPadding"
+	                android:paddingLeft="@dimen/adjustmentPadding"
+	                android:text="@string/kilobytespersecond"
+	                android:textAppearance="?android:attr/textAppearanceSmall"
+	                android:width="@dimen/unitsWidth" />
+	
+	        </LinearLayout>
+	  	
+	  	  <LinearLayout
+	  	    android:id="@+id/downloadHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+	
+
+	            <TextView
+	                android:id="@+id/downloadHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/downloadLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/downloadHistorySpeed"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+	            <TextView
+	                android:id="@+id/downloadHistoryUnits"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="bottom"
+	                android:gravity="bottom"
+	                android:paddingBottom="@dimen/adjustmentPadding"
+	                android:paddingLeft="@dimen/adjustmentPadding"
+	                android:text="@string/kilobytespersecond"
+	                android:textAppearance="?android:attr/textAppearanceSmall"
+	                android:width="@dimen/unitsWidth" />
+	
+	        </LinearLayout>
+	  	 
+	  	  <LinearLayout
+	  	    android:id="@+id/latencyHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+	
+
+	            <TextView
+	                android:id="@+id/latencyHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/latencyLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/latencyHistorySpeed"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.50"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+	            <TextView
+	                android:id="@+id/latencyHistoryUnits"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="bottom"
+	                android:gravity="bottom"
+	                android:paddingBottom="@dimen/adjustmentPadding"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:text="@string/miliseconds"
+	                android:textAppearance="?android:attr/textAppearanceSmall"
+	                android:width="@dimen/unitsWidth" />
+	
+	        </LinearLayout>
+	        
+	  	  <LinearLayout
+	  	    android:id="@+id/jitterHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+
+	
+	            <TextView
+	                android:id="@+id/jitterHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/jitterLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/jitterHistorySpeed"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.08"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+	            <TextView
+	                android:id="@+id/jitterHistoryUnits"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="bottom"
+	                android:gravity="left"
+	                android:paddingBottom="@dimen/adjustmentPadding"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:text="@string/miliseconds"
+	                android:textAppearance="?android:attr/textAppearanceSmall"
+	                android:width="@dimen/unitsWidth" />
+	
+	        </LinearLayout>      
+    
+	  	  	<LinearLayout
+	  	    android:id="@+id/NetworkHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+
+	
+	            <TextView
+	                android:id="@+id/NetworkHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/NetworkLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/NetworkHistoryType"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.08"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+
+	
+	        </LinearLayout>  
+	        
+	  	  	<LinearLayout
+	  	    android:id="@+id/LatitudeHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+
+	
+	            <TextView
+	                android:id="@+id/LatitudeHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/latitudeLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/LatitudeHistoryValue"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.08"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+
+	
+	        </LinearLayout> 
+
+	  	   <LinearLayout
+	  	    android:id="@+id/LongitudeHistory"
+	  	    android:layout_width="match_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+
+	
+	            <TextView
+	                android:id="@+id/LongitudeHistoryLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical"
+	                android:paddingLeft="@dimen/standardPadding"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/longitudeLabel"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:layout_weight="1" />
+	
+	            <TextView
+	                android:id="@+id/LongtitudeHistoryValue"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:layout_weight="1.08"
+	                android:gravity="right"
+	                android:paddingTop="@dimen/adjustmentPadding"
+	                android:text="@string/defaultValue"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textSize="@dimen/resultsLabelSize"
+	                android:width="@dimen/numDisplayWidth" />
+	
+
+	
+	        </LinearLayout> 
+   <LinearLayout
+	  	    android:layout_width="fill_parent"
+	  	    android:layout_height="@dimen/resultsLabelSize"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >
+   </LinearLayout>      
+  <LinearLayout
+	  	    android:id="@+id/ButtonHistory"
+	  	    android:layout_width="fill_parent"
+	  	    android:layout_height="@dimen/resultsHeight"
+	  	    android:gravity="center"
+	  	    android:layout_gravity="center_vertical"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/standardPadding" >  
+    
+        <Button
+        android:id="@+id/dialogButtonDelete"
+        android:layout_width="@dimen/buttonWidth"
+        android:layout_height="@dimen/buttonHeight"
+        android:text="Delete"
+        android:textSize="@dimen/resultsLabelSize"
+        android:gravity="center"
+        android:paddingLeft="@dimen/standardPadding"
+
+        />
+        
+        <Button
+        android:id="@+id/dialogButtonOK"
+        android:layout_width="@dimen/buttonWidth"
+        android:layout_height="@dimen/buttonHeight"
+        android:text="OK"
+        android:gravity="center"
+        android:textSize="@dimen/resultsLabelSize"
+
+       
+        />
+  </LinearLayout>  
+   <LinearLayout
+	  	    android:layout_width="fill_parent"
+	  	    android:layout_height="@dimen/resultsLabelSize"
+	  	    android:gravity="center"
+	  	    android:orientation="horizontal"
+	  	    android:paddingTop="@dimen/adjustmentPadding" >
+   </LinearLayout>      
+</LinearLayout>

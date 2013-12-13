@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Item"
+    android:layout_width="wrap_content"
+    android:weightSum="100"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+	android:gravity="left"
+	android:paddingBottom="10dp"
+	android:background="#000000"
+	android:paddingTop="10dp"
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp">
+  
+	<TextView
+	    android:id="@+id/historyID"
+	    android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="0"
+	    android:gravity="left"
+	    android:paddingTop="4dp"
+	    android:textColor="#ffffff"
+	    android:textSize="12sp"
+	    android:visibility="invisible" >
+
+	</TextView>	
+	
+	<TextView
+	    android:id="@+id/historyDate"
+	    android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="20"
+	    android:gravity="left"
+	    android:paddingTop="4dp"
+	    android:textColor="#ffffff"
+	    android:textSize="10sp"
+	    android:typeface="serif" >
+
+	</TextView>
+	
+	<TextView
+	    android:id="@+id/historyUpload"
+	    android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="20"
+	    android:gravity="center"
+	    android:paddingTop="4dp"
+	    android:textColor="#ffffff"
+	    android:textSize="12sp"
+	    android:typeface="serif" />
+	
+	<TextView
+	    android:id="@+id/historyDownload"
+	    android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="20"
+	    android:gravity="center"
+	    android:paddingTop="4dp"
+	    android:textColor="#ffffff"
+	    android:textSize="12sp"
+	    android:typeface="serif" />
+	
+	<TextView
+	    android:id="@+id/historyLatency"
+	    android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="20"
+	    android:gravity="center"
+	    android:paddingTop="4dp"
+	    android:textColor="#ffffff"
+	    android:textSize="12sp"
+	    android:typeface="serif" >
+
+	</TextView>
+	
+	<TextView
+	    android:id="@+id/historyJitter"
+	    android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="20"
+	    android:gravity="center"
+	    android:paddingTop="4dp"
+	    android:textColor="#ffffff"
+	    android:textSize="12sp"
+	    android:typeface="serif" >
+
+	</TextView>
+
+</LinearLayout>    

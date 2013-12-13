@@ -9,7 +9,7 @@ modification, are permitted provided that the following conditions are met:
        this list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above
-	   copyright notice, this list of conditions and the following disclaimer in the
+           copyright notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
     3. Neither the name of the CPUC, CSU Monterey Bay, nor the names of
@@ -30,6 +30,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package gov.ca.cpuc.calspeed.android;
 
+
 import gov.ca.cpuc.calspeed.android.AndroidUiServices.TextOutputAdapter;
 
 import java.io.BufferedReader;
@@ -39,6 +40,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 import java.lang.InterruptedException;
+
 
 
 public class ExecCommandLine {
@@ -67,7 +69,6 @@ public class ExecCommandLine {
 
 	public String runIperfCommand() throws TimeoutException,
 			InterruptedException {
-//		long startTime = 0;
 		boolean finished = false;
 
 		int read;
@@ -102,7 +103,6 @@ public class ExecCommandLine {
 			if (!iperfTest.isUDP) {
 				uiServices.startUploadTimer();
 			}
-			// Executes the command.
 			this.process = Runtime.getRuntime().exec(commandline);
 
 			output.append("\nIperf command line:" + commandline + "\n");
@@ -163,9 +163,9 @@ public class ExecCommandLine {
 					readererror.close();
 					return (output.toString() + outputerror.toString());
 				} catch (IllegalThreadStateException ex) {
-					// if process hasn't exited yet, so keep checking
+					return(output.toString()+outputerror.toString());
 				} catch (IOException e) {
-					throw new RuntimeException();
+					return(output.toString()+outputerror.toString());
 				} catch (InterruptedException e) {
 					process.destroy();
 					reader.close();
@@ -173,17 +173,23 @@ public class ExecCommandLine {
 					finished = true;
 					timer.cancel();
 					throw new InterruptedException();
+				}catch (Exception e){
+					return(output.toString()+outputerror.toString());
 				}
 
 			}
 		} catch (IOException e) {
-			throw new RuntimeException();
+			return(output.toString()+outputerror.toString());
+		}catch (Exception e){
+			return(output.toString()+outputerror.toString());
 		}
 		return (output.toString() + outputerror.toString());
 	}
 
 	public String runCommand() throws InterruptedException {
 
+		BufferedReader reader;
+		BufferedReader readererror;
 
 		StringBuffer output = new StringBuffer();
 
@@ -194,7 +200,9 @@ public class ExecCommandLine {
 				@Override
 				public void run() {
 					commandTimedOut = true;
-					pingTest.success = false;
+					if(pingTest != null){ 
+						pingTest.success = false;
+					}
 					this.cancel();
 					process.destroy();
 					return;
@@ -203,17 +211,15 @@ public class ExecCommandLine {
 
 			timer.schedule(task, timeout);
 
-			// Executes the command.
 			this.process = Runtime.getRuntime().exec(commandline);
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
+			reader = new BufferedReader(new InputStreamReader(
 					process.getInputStream()));
-			BufferedReader readererror = new BufferedReader(
+			readererror = new BufferedReader(
 					new InputStreamReader(process.getErrorStream()));
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-				// output.append(buffer, 0, read);
 				output.append(line + "\n");
 				if (pingTest != null) {
 					pingTest.ProcessOutput(line.toString() + "\n", "Phone");
@@ -249,17 +255,20 @@ public class ExecCommandLine {
 			}
 
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			timer.cancel();
+			output.append(e.getMessage());
 		} catch (IllegalThreadStateException ex) {
+			timer.cancel();
 			output.append("\nerror executing command: " + commandline);
-			return output.toString();
+			output.append(ex.getMessage());
 		} catch (InterruptedException e) {
 			process.destroy();
-
 			timer.cancel();
 			process.destroy();
-
 			throw new InterruptedException();
+		} catch (Exception e){
+			timer.cancel();
+			output.append(e.getMessage());
 		}
 		return output.toString();
 	}

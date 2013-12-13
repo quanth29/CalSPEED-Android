@@ -1,10 +1,10 @@
-// Original work: Copyright 2009 Google Inc. All Rights Reserved.
-//
-// Modified work: The original source code comes from the NDT Android app
-//                that is available from http://code.google.com/p/ndt/.
-//                It's modified for the CalSPEED Android app by California 
-//                State University Monterey Bay (CSUMB) on April 29, 2013.
-//
+/* Original work: Copyright 2009 Google Inc. All Rights Reserved.
+ 
+   Modified work: The original source code (AndroidNdt.java) comes from the NDT Android app
+                  that is available from http://code.google.com/p/ndt/.
+                  It's modified for the CalSPEED Android app by California 
+                  State University Monterey Bay (CSUMB) on April 29, 2013.
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
@@ -17,15 +17,18 @@ public class Constants {
 	 */
 	public static final float SMOOTH= 0.15f;
 	
+/* Preference static variables */
+	public static final int MODE_PRIVATE = 0;
+
   /**
    * Maximum test steps for ProgressBar setting.
    */
   public static final int TEST_STEPS = 18;
 
-  public static final String privacyPolicyURL="http://www.cpuc.ca.gov/PUC/Telco/Information+for+providing+service/Broadband+Availability+Maps.htm";
+  public static final String privacyPolicyURL="http://www.ca.gov/privacy.html";
  
-
-  // Messages submitted from working thread to UI
+  public static final float METERS_TO_FEET = 3.28084f;
+ 
   public static final int THREAD_MAIN_APPEND = 0;
   public static final int THREAD_STAT_APPEND = 1;
   public static final int THREAD_BEGIN_TEST = 2;

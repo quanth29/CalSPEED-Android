@@ -15,12 +15,5 @@
       			android:scrollbars="vertical" android:gravity="top" />
     	</LinearLayout>
     </ScrollView>
-   <!--
-    <TextView
-       android:layout_width="match_parent"
-       android:layout_height="fill_parent"
-       android:padding="15dp"
-       android:text="@string/about_text"
-       android:textColor="#FFFFFF" />
-  -->
+
 </LinearLayout>

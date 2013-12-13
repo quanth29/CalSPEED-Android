@@ -9,7 +9,7 @@ modification, are permitted provided that the following conditions are met:
        this list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above
-	   copyright notice, this list of conditions and the following disclaimer in the
+           copyright notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
     3. Neither the name of the CPUC, CSU Monterey Bay, nor the names of
@@ -26,34 +26,21 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
 import gov.ca.cpuc.calspeed.android.Constants;
-import gov.ca.cpuc.calspeed.android.Calspeed.LatLong;
 import gov.ca.cpuc.calspeed.android.AndroidUiServices.TextOutputAdapter;
+import gov.ca.cpuc.calspeed.android.CalspeedFragment.LatLong;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import java.util.concurrent.TimeoutException;
-import java.net.*;
-import java.util.*;
-
-import android.app.Activity;
-import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
-import android.content.Context;
-
-import android.content.Intent;
-import android.os.Environment;
-import android.util.Log;
-import android.widget.*;
-
 
 public class SaveResults{
 	private String filename;
@@ -65,7 +52,6 @@ public class SaveResults{
 	private Double longitude;
 	private Double latitude;
 
-	//Error checking
 	private Boolean error = false;
 	private String errorMessage = "";
 	
@@ -171,7 +157,8 @@ public class SaveResults{
     	return(returnStatus);
     }
     
-    private String writeText(String text){
+    @SuppressWarnings("unused")
+	private String writeText(String text){
     	if (display != null){
     		display.append(text);
     	}
@@ -221,22 +208,18 @@ public class SaveResults{
 
 
 	  public boolean SDCardIsWritable(){
-		  boolean mExternalStorageAvailable = false;
 		  boolean mExternalStorageWriteable = false;
 		  String state = Environment.getExternalStorageState();
 
 		  if (Environment.MEDIA_MOUNTED.equals(state)) {
 		      // We can read and write the media
-		      mExternalStorageAvailable = true;
 		      mExternalStorageWriteable = true;
 		  } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 		      // We can only read the media
-		      mExternalStorageAvailable = true;
 		      mExternalStorageWriteable = false;
 		  } else {
 		      // Something else is wrong. It may be one of many other states, but all we need
 		      //  to know is we can neither read nor write
-		      mExternalStorageAvailable = false;
 		      mExternalStorageWriteable = false;
 		  }
 		  return mExternalStorageWriteable;

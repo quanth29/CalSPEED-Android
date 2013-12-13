@@ -9,7 +9,7 @@ modification, are permitted provided that the following conditions are met:
        this list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above
-	   copyright notice, this list of conditions and the following disclaimer in the
+           copyright notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
     3. Neither the name of the CPUC, CSU Monterey Bay, nor the names of
@@ -26,22 +26,17 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
 import gov.ca.cpuc.calspeed.android.Constants;
-//import gov.ca.cpuc.calspeed.android.StandardTest;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import android.util.Log;
 
-/**
- * 
- * @author steph
- */
 public final class ProcessIperf {
 	public Boolean isPhase2;
 	public Float phase1UploadResult;
@@ -64,6 +59,8 @@ public final class ProcessIperf {
 	public Float downloadSpeed;
 	public Boolean downloadSuccess;
 	public String downloadMessage;
+	public Float down;
+	public Boolean downFinalStatusFailed;
 	public Float[] rollingDownloadSpeed = new Float[4];
 	public Integer[] rollingDownloadCount = new Integer[4];
 	public Boolean[] rollingDownloadDone = new Boolean[4];
@@ -175,7 +172,7 @@ public final class ProcessIperf {
 	private void MoveProgressBar(Integer increment) {
 		uiServices.incrementProgress(2);
 		try {
-			Thread.currentThread().sleep(2000);
+			Thread.sleep(2000);
 		} catch (Exception e) {
 			// do nothing
 		}
@@ -254,7 +251,6 @@ public final class ProcessIperf {
 		uiServices.setResults(Constants.THREAD_WRITE_DOWNLOAD_DATA,
 				downloadMessage, formatFloatString(downloadSpeed.toString()),
 				!printDownloadSpeed, !printDownloadSpeed);
-		// uiServices.stopDownloadTimer();
 
 		uiServices.setDownloadNumberStopTimer(formatFloatString(downloadSpeed
 				.toString()));
@@ -294,10 +290,10 @@ public final class ProcessIperf {
 	}
 
 	public void SetIperfTCPAvgFinal() {
-		Float down = 0.0f;
+		down = 0.0f;
 
 		String downFinalMessage = "Download Speed";
-		Boolean downFinalStatusFailed = false;
+		downFinalStatusFailed = false;
 
 		if (!uploadSuccess) {
 			SetFinalUploadSpeed();
@@ -533,7 +529,7 @@ public final class ProcessIperf {
 					iperfThreadState[threadIndex] = 2; // keep checking for
 														// additional download
 														// threads using this
-														// threadnumber
+														// thread number
 					rollingDownloadDone[threadIndex] = true;
 					displayDownloadRollingAverage();
 				} else {
@@ -549,7 +545,6 @@ public final class ProcessIperf {
 			if (Constants.DEBUG)
 				System.out.println("Exception threadnum ="
 						+ threadIndex.toString());
-			// System.exit(1);
 		}
 	}
 

@@ -9,7 +9,7 @@ modification, are permitted provided that the following conditions are met:
        this list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above
-	   copyright notice, this list of conditions and the following disclaimer in the
+           copyright notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
     3. Neither the name of the CPUC, CSU Monterey Bay, nor the names of
@@ -26,17 +26,16 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
+*/
 package gov.ca.cpuc.calspeed.android;
+
 import gov.ca.cpuc.calspeed.android.AndroidUiServices;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-/**
- *
- * @author California State University Monterey Bay ITCD
- */
+import java.text.ParseException;
+import java.util.Locale;
+
 public class ProcessPing {
 
     public String average;
@@ -44,7 +43,6 @@ public class ProcessPing {
     public String maximum;
     public String loss;
     private Integer state;
-    private Integer startIndex;
     public String message;
     public Boolean success;
     public Float rollingSum;
@@ -60,7 +58,6 @@ public class ProcessPing {
         maximum = "NA";
         loss = "NA";
         state = 0;
-        startIndex = 0;
         this.message = message;
         success = false;
         rollingSum = 0.0f;
@@ -73,7 +70,20 @@ public class ProcessPing {
     	if (firstPingAverage.contains("NA")){
     		this.phase1Average = 0.0f;
     	}else{
-    		this.phase1Average = Float.valueOf(firstPingAverage);
+    		NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+    		try {
+    			firstPingAverage = firstPingAverage.replaceAll("\\s+","");
+    			if(firstPingAverage.indexOf('.')==-1){
+    				firstPingAverage = firstPingAverage.replace(",", "." );
+    			}
+    			
+				Number toParse = nf.parse(firstPingAverage);
+				this.phase1Average = toParse.floatValue();
+			} catch (ParseException e) {
+				e.printStackTrace();
+				this.phase1Average = Float.valueOf(firstPingAverage.replace(",", "." ));
+			}	
+    		
     	}
     	this.isPhase2 = true;
     }
@@ -135,7 +145,6 @@ public class ProcessPing {
                         indexEnd = line.indexOf("%", indexStart + 10);
                         loss = line.substring(indexStart + 10, indexEnd);
                         state = 1;
-                        startIndex = 0;
                     }else{
                     	indexStart = line.indexOf("time=");
                     	if (indexStart != -1){
@@ -161,6 +170,7 @@ public class ProcessPing {
                         delimited = statsString.split("/");
                         minimum = delimited[0];
                         average = delimited[1];
+                        average = average.replace(",", ".");
                         Float flAverage = Float.valueOf(average);
                         NumberFormat numberFormat  = new DecimalFormat("#.0");
                 		average = numberFormat.format(flAverage);    
@@ -172,7 +182,6 @@ public class ProcessPing {
                     break;
             }
         } else {
-            // Netbook
             switch (state) {
                 case 0:
                     indexEnd = line.indexOf("% loss)");
@@ -180,7 +189,6 @@ public class ProcessPing {
                         indexStart = line.indexOf("(", indexEnd - 6);
                         loss = line.substring(indexStart + 1, indexEnd);
                         state = 1;
-                        startIndex = 0;
                     }else{
                     	indexStart = line.indexOf("time=");
                     	if (indexStart != -1){
@@ -216,6 +224,7 @@ public class ProcessPing {
                                 indexEnd = line.indexOf("ms", indexStart + 10);
                                 if (indexEnd != -1) {
                                     average = line.substring(indexStart + 10, indexEnd);
+                                    average = average.replace(",", ".");
                                     state = 2;
                                 }
                             }

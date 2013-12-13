@@ -66,31 +66,23 @@
 //                It's modified for the CalSPEED Android app by California 
 //                State University Monterey Bay (CSUMB) on April 29, 2013.
 // 
- 
+
 package gov.ca.cpuc.calspeed.android;
 
-import android.os.Bundle;
 import gov.ca.cpuc.calspeed.android.Constants;
 import gov.ca.cpuc.calspeed.android.SaveResults;
-import gov.ca.cpuc.calspeed.android.Calspeed.LatLong;
 import gov.ca.cpuc.calspeed.android.AndroidUiServices.TextOutputAdapter;
+import gov.ca.cpuc.calspeed.android.CalspeedFragment.LatLong;
+import gov.ca.cpuc.calspeed.android.CalspeedFragment.NetworkLatLong;
 
-import java.io.*;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeoutException;
-import java.net.*;
 import java.util.*;
 
-import android.app.Activity;
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.ToggleButton;
-import android.content.Context;
-import android.view.*;
+import android.location.Location;
 
 
 public class StandardTest implements Runnable {
@@ -101,8 +93,6 @@ public class StandardTest implements Runnable {
 	public static final String NETWORK_MOBILE = "MOBILE";
 	public static final String NETWORK_WIRED = "WIRED";
 	public static final String NETWORK_UNKNOWN = "UNKNOWN";
-
-	
 
 	private static final int RUNCOMMAND_SUCCESS = 0;
 	private static final int RUNCOMMAND_FAIL = 1;
@@ -128,23 +118,41 @@ public class StandardTest implements Runnable {
 	private final Date date;
 	private final Double longitude;
 	private final Double latitude;
+	private Float gpsDistanceTraveled;
+	private Float networkDistanceTraveled;
 	private final String locationID;
+	private final String connectionType;
+	
+	
 	public ExecCommandLine command;
 	private LatLong testLatLong;
-	private Calspeed context;
-	private TextView topText2;
-	private TextView topText;
-	private ImageView green;
+	private NetworkLatLong networkLatLong;
 	private ProcessPing pingConnectivity;
 	private ProcessPing pingStatsEast;
 	private ProcessPing pingStatsWest;
+	private Boolean pingStatusFailed;
+	private Float pingaverage;
 	private ProcessIperf[] tcpResultsWest;
 	private ProcessIperf[] tcpResultsEast;
 	private ProcessIperf[] udpResultsWest;
 	private ProcessIperf[] udpResultsEast;
+	private Boolean udpStatusFailed;
+	private Float udpAverage;
 	private String TCPPort;
 	private String UDPPort;
-	Thread currentThread;
+	Thread currentThread;	
+	private String saveLat;
+	private String saveLong;
+	private Double saveLastNetworkLat;
+	private Double saveLastNetworkLong;
+	private Double saveLastGPSLat;
+	private Double saveLastGPSLong;
+	private HistoryDatabaseHandler db;
+
+	private CalspeedFragment outerCalspeedFrag;
+	
+	
+	
 
 	/*
 	 * Initializes the network test thread.
@@ -156,12 +164,13 @@ public class StandardTest implements Runnable {
 	 * @param networkType indicates the type of network, e.g. 3G, Wifi, Wired,
 	 * etc.
 	 */
-	public StandardTest(Calspeed context, String server1, String server2,
+	public StandardTest(NetworkLatLong networkLatLong, LatLong testLatLong, String server1, String server2,
 			AndroidUiServices uiServices, String networkType,
 			AssetManager assetManager, NdtLocation ndtLocation,
 			String applicationFilesDir, String DeviceId, Date date,
 			Double startLongitude, Double startLatitude, String textResults,
-			String locationID, String TCPPort, String UDPPort) {
+			String locationID, String TCPPort, String UDPPort,String connectionType,
+			HistoryDatabaseHandler db, CalspeedFragment inarg) {
 		this.server1 = server1;
 		this.server2 = server2;
 		this.uiServices = uiServices;
@@ -173,14 +182,27 @@ public class StandardTest implements Runnable {
 		this.date = date;
 		this.longitude = startLongitude;
 		this.latitude = startLatitude;
+		this.saveLat = "0.0";
+		this.saveLong = "0.0";
+		saveLastNetworkLat = 0.0;
+		saveLastNetworkLong = 0.0;
+		saveLastGPSLat = 0.0;
+		saveLastGPSLong = 0.0;
 		this.textResults = textResults;
 		this.locationID = locationID;
 		this.command = null;
-		this.context = context;
-		this.testLatLong = context.new LatLong();
+		this.networkLatLong = networkLatLong;
+		this.networkLatLong.getLatitudeLongitude(networkLatLong);
+		this.testLatLong = testLatLong;
 		this.testLatLong.getLatitudeLongitude(testLatLong);
+		this.gpsDistanceTraveled = Float.valueOf("0");
+		this.networkDistanceTraveled = Float.valueOf("0");
 		this.TCPPort = TCPPort;
 		this.UDPPort = UDPPort;
+		this.connectionType = connectionType;
+		this.db = db;
+		this.outerCalspeedFrag = inarg;
+		
 
 		setupResultsObjects();
 
@@ -198,21 +220,73 @@ public class StandardTest implements Runnable {
 							"US"));
 		}
 	}
+	private String formatGPSCoordinate(Double coord){
+		DecimalFormat df = new DecimalFormat("#.00000");
 
+		return(df.format(coord));
+	}
 
 	private void printLatLong() {
 
 		testLatLong.getLatitudeLongitude(testLatLong);
-		showResults("\nLatitude:" + testLatLong.Latitude);
-		showResults("\nLongitude:" + testLatLong.Longitude);
+		showResults("\nGPSLatitude:" + testLatLong.Latitude);
+		showResults("\nGPSLongitude:" + testLatLong.Longitude);
 		String Lat0 = Double.toString(testLatLong.Latitude);
-		statistics.append("\nLatitude:" + Lat0);
+		statistics.append("\nGPSLatitude:" + Lat0);
 		String Long0 = Double.toString(testLatLong.Longitude);
-		statistics.append("\nLongitude:" + Long0);
+		statistics.append("\nGPSLongitude:" + Long0);
 		uiServices.upDateLatLong();
+		
+		
+		networkLatLong.getLatitudeLongitude(networkLatLong);
+		showResults("\nNetworkLatitude:" + networkLatLong.Latitude);
+		showResults("\nNetworkLongitude:" + networkLatLong.Longitude);
+		
+
+		sumNewDistances();
+		Float gpsDistanceFeet = gpsDistanceTraveled * Constants.METERS_TO_FEET;
+		showResults("\nGPSDistanceMoved: " + gpsDistanceFeet.toString());
+		Float networkDistanceFeet = networkDistanceTraveled * Constants.METERS_TO_FEET;
+		showResults("\nNetworkDistanceMoved: " + networkDistanceFeet.toString());
+		// save for the database history record
+		saveLat = formatGPSCoordinate(testLatLong.Latitude);
+		saveLong = formatGPSCoordinate(testLatLong.Longitude);
+
 	}
 
-	
+	private void sumNewDistances(){
+		
+		Location oldGPSLocation = new Location("");
+		oldGPSLocation.setLatitude(saveLastGPSLat);
+		oldGPSLocation.setLongitude(saveLastGPSLong);
+		Location oldNetworkLocation = new Location("");
+		oldNetworkLocation.setLatitude(saveLastNetworkLat);
+		oldNetworkLocation.setLongitude(saveLastNetworkLong);
+
+		if (testLatLong.valid){
+			if ((saveLastGPSLat != 0) && (saveLastGPSLong != 0)){
+				Location newGPSLocation = new Location("");
+				newGPSLocation.setLatitude(testLatLong.Latitude);
+				newGPSLocation.setLongitude(testLatLong.Longitude);
+				gpsDistanceTraveled += oldGPSLocation.distanceTo(newGPSLocation);
+
+			}
+			saveLastGPSLat = testLatLong.Latitude;
+			saveLastGPSLong = testLatLong.Longitude;
+		}
+		if (networkLatLong.valid){
+			if ((saveLastNetworkLat != 0)&& (saveLastNetworkLong != 0)){
+				Location newNetworkLocation = new Location("");
+				newNetworkLocation.setLatitude(networkLatLong.Latitude);
+				newNetworkLocation.setLongitude(networkLatLong.Longitude);
+				networkDistanceTraveled += oldNetworkLocation.distanceTo(newNetworkLocation);
+			}
+			
+			saveLastNetworkLat = networkLatLong.Latitude;
+			saveLastNetworkLong = networkLatLong.Longitude;
+		}
+		
+	}
 
 	public void run() {
 		try {
@@ -229,7 +303,7 @@ public class StandardTest implements Runnable {
 			MoveProgressBar(1);
 			for (int i = 0; i < 3; i++) {
 				runStatus = RunCommand("Ping Quick Test", "ping -c 4 "
-						+ server1, null, pingConnectivity);
+						+ server1/*.getAddress()*/, null, pingConnectivity);
 				if ((runStatus != PING_100_PERCENT_LOSS)
 						&& (runStatus != RUNCOMMAND_INTERRUPT)) {
 					break;  // success
@@ -237,7 +311,8 @@ public class StandardTest implements Runnable {
 				waiting(3);
 			}
 			if (runStatus == PING_100_PERCENT_LOSS) {
-				ndtLocation.stopListen();		
+				ndtLocation.stopListen();
+				ndtLocation.stopNetworkListenerUpdates();
 				showResults("\nConnectivity Test Failed--Exiting Test.\n");
 				printToSummary("\nConnectivity Test Failed--Exiting Test.\n");
 				runStatus = PING_CONNECTIVITY_FAIL;
@@ -248,6 +323,7 @@ public class StandardTest implements Runnable {
 			} else if (runStatus == RUNCOMMAND_INTERRUPT){
 				Log.v("LAWDebug", "RUNCOMMAND_INTERRUPT.");
 				ndtLocation.stopListen();
+				ndtLocation.stopNetworkListenerUpdates();
 				showResults("\nConnectivity Test Failed--Exiting Test.\n");
 				printToSummary("\nConnectivity Test Failed--Exiting Test.\n");
 				runStatus = PING_CONNECTIVITY_FAIL;
@@ -311,6 +387,7 @@ public class StandardTest implements Runnable {
 				printLatLong();
 
 				tcpResultsEast[0].setTCPPhase2(tcpResultsWest[0].uploadSpeed, tcpResultsWest[0].downloadSpeed);
+				setPhase2DisplayNumbers(tcpResultsWest[0].uploadSpeed, tcpResultsWest[0].downloadSpeed,pingStatsWest.average,udpResultsWest[0].jitter);
 				
 				showResults("\nStarting Test 4: Iperf TCP East....\n");
 				printToSummary("\nStarting Test 4....\n");
@@ -375,7 +452,7 @@ public class StandardTest implements Runnable {
 			}
 		
 			ndtLocation.stopListen();
-
+			ndtLocation.stopNetworkListenerUpdates();
 			// Finish the Test
 			if (runStatus == RUNCOMMAND_INTERRUPT){
 				uiServices.setStatusText("Test Interrupted.");
@@ -402,12 +479,32 @@ public class StandardTest implements Runnable {
 		}
 		
 		uiServices.onEndTest();
+		outerCalspeedFrag.enableTabs();
+				
 		return;
+	}
+	private void setPhase2DisplayNumbers(Float uploadSpeed,Float downloadSpeed, String latency, String jitter){
+		
+		uiServices.setResults(Constants.THREAD_WRITE_UPLOAD_DATA,
+				"Upload Speed", "0", false, false);
+		uiServices.setUploadNumber(uploadSpeed.toString());
+		uiServices.setResults(Constants.THREAD_WRITE_DOWNLOAD_DATA,
+				"Download Speed", "0", false, false);
+		uiServices.setDownloadNumber(downloadSpeed.toString());
+		uiServices.setResults(Constants.THREAD_WRITE_LATENCY_DATA, "Delay",
+				latency, false, false);
+		uiServices.setResults(Constants.THREAD_WRITE_JITTER_DATA,
+				"Delay Variation", jitter, false, false);
+
+	}
+	private void printDistances(){
+		showResults("\nGPSDistanceMoved: " + gpsDistanceTraveled.toString()+"m\n");
+		showResults("\nNetworkDistanceMoved: " + networkDistanceTraveled.toString()+"m\n");
 	}
 	public void MoveProgressBar(Integer increment){
 		uiServices.incrementProgress(increment);
 		try{
-			Thread.currentThread().sleep(2000);
+			Thread.sleep(2000);
 		}catch(Exception e){
 			//do nothing
 		}
@@ -419,26 +516,26 @@ public class StandardTest implements Runnable {
 		uiServices.setResults(Constants.THREAD_WRITE_JITTER_DATA,"Delay Variation", "0", false, false);
 	}
 	private void SetPingAvgFinal(ProcessPing Ping1,ProcessPing Ping2){
-		Float avg = 0.0f;
-		Boolean pingStatusFailed = false;
+		pingaverage = 0.0f;
+		pingStatusFailed = false;
 		String pingMessage = "Delay";
 		
 		if (Ping1.success){
 			if (Ping2.success){
-				avg = (Float.parseFloat(Ping1.average) + Float.parseFloat(Ping2.average))/2;
+				pingaverage = (Float.parseFloat(Ping1.average.replace(",", ".")) + Float.parseFloat(Ping2.average.replace(",", ".")))/2;
 			}else{
-				avg = Float.parseFloat(Ping1.average);
+				pingaverage = Float.parseFloat(Ping1.average.replace(",", "."));
 			}
 		}else{
 			if (Ping2.success){
-				avg = Float.parseFloat(Ping2.average);
+				pingaverage = Float.parseFloat(Ping2.average.replace(",", "."));
 			}else{
-				avg = 0.0f;
+				pingaverage = 0.0f;
 				pingMessage = "Delay Incomplete";
 				pingStatusFailed = true;
 			}
 		}
-		uiServices.setResults(Constants.THREAD_WRITE_LATENCY_DATA, pingMessage,ProcessIperf.formatFloatString(avg.toString()), pingStatusFailed, pingStatusFailed);	
+		uiServices.setResults(Constants.THREAD_WRITE_LATENCY_DATA, pingMessage,ProcessIperf.formatFloatString(pingaverage.toString()), pingStatusFailed, pingStatusFailed);	
 	}
 	private void setUDPPhase2(ProcessIperf[] udpIperfTest){
 		for (int i = 0; i < Constants.NUM_UDP_TESTS_PER_SERVER - 1; i++) {
@@ -446,29 +543,30 @@ public class StandardTest implements Runnable {
 		}
 	}
 	private void setUDPJitterFinal(ProcessIperf udp1,ProcessIperf udp2){
-		Float avg = 0.0f;
-		Boolean udpStatusFailed = false;
+		udpAverage = 0.0f;
+		udpStatusFailed = false;
 		String udpMessage = "Delay Variation";
 		
 		if (udp1.udpSuccess){
 			if (udp2.udpSuccess){
-				avg = (Float.parseFloat(udp1.jitter) + Float.parseFloat(udp2.jitter))/2;
+				udpAverage = (Float.parseFloat(udp1.jitter) + Float.parseFloat(udp2.jitter))/2;
 			}else{
-				avg = Float.parseFloat(udp1.jitter);
+				udpAverage = Float.parseFloat(udp1.jitter);
 			}
 		}else{
 			if (udp2.udpSuccess){
-				avg = Float.parseFloat(udp2.jitter);
+				udpAverage = Float.parseFloat(udp2.jitter);
 			}else{
-				avg = 0.0f;
+				udpAverage = 0.0f;
 				udpMessage = "Delay Variation Incomplete";
 				udpStatusFailed = true;
 			}
 		}
-		uiServices.setResults(Constants.THREAD_WRITE_JITTER_DATA, udpMessage,ProcessIperf.formatFloatString(avg.toString()), udpStatusFailed, udpStatusFailed);
+		uiServices.setResults(Constants.THREAD_WRITE_JITTER_DATA, udpMessage,ProcessIperf.formatFloatString(udpAverage.toString()), udpStatusFailed, udpStatusFailed);
 	}
 	private Integer SaveAllResults() {
 		Integer returnStatus = RUNCOMMAND_SUCCESS;
+		SaveHistory();
 		try {
 			showResults("\nSaving Results to sdcard...\n");
 			statistics.append("\nSaving Results to sdcard...\n");
@@ -536,6 +634,106 @@ public class StandardTest implements Runnable {
 		}
 			
 		return(returnStatus);
+	}
+	private void SaveHistory(){
+
+		History history;
+
+		history = GetTestHistory();
+		
+		if (history != null){
+			db.addHistory(history);
+		}
+		
+	}
+	private History GetTestHistory(){
+
+		String upload;
+		String download;
+		String latency;
+		String jitter;
+		String latitude;
+		String longitude;
+		
+		History history = null;
+		latitude = "0";
+		longitude = "0";
+		
+		
+		try{
+			if ((tcpResultsEast[0].uploadSuccess) && 
+					((tcpResultsEast[0].uploadSpeed != 0) && tcpResultsWest[0].uploadSpeed != 0)){
+				Integer numInt = Math.round(tcpResultsEast[0].uploadSpeed);
+				upload =ProcessIperf.formatFloatString(numInt.toString());
+			}else{
+				upload ="N/A";
+			}
+		}catch (Exception e){
+				upload = "N/A";
+		}
+
+		try{
+			if (!tcpResultsEast[0].downFinalStatusFailed){
+				Integer numInt = Math.round(tcpResultsEast[0].down);
+				download =ProcessIperf.formatFloatString(numInt.toString());
+			}else{
+				download = "N/A";
+			}
+		}catch (Exception e){
+				download = "N/A";
+		}
+		
+		try{
+			if (!pingStatusFailed){
+				Integer numInt = Math.round(pingaverage);
+				latency =ProcessIperf.formatFloatString(numInt.toString());
+			}else{
+				latency ="N/A";
+			}
+		}catch (Exception e){
+				latency = "N/A";
+		}
+		
+		try{
+			if (!udpStatusFailed){
+				Integer numInt = Math.round(udpAverage);
+				jitter =ProcessIperf.formatFloatString(numInt.toString());
+			}else{
+				jitter ="N/A";
+			}
+		}catch (Exception e){
+			jitter = "N/A";
+		}
+		
+		
+		try{
+		String newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		
+		if ((saveLastGPSLat != 0) && (saveLastGPSLong != 0)){
+			latitude = formatGPSCoordinate(saveLastGPSLat);
+			longitude = formatGPSCoordinate(saveLastGPSLong);
+		}else{
+			if ((saveLastNetworkLat != 0)&&(saveLastNetworkLong != 0)){
+				latitude = formatGPSCoordinate(saveLastNetworkLat);
+				longitude = formatGPSCoordinate(saveLastNetworkLong);
+			}else{
+				if ((ndtLocation.GPSLastKnownLocation != null) && (ndtLocation.GPSLastKnownLocation.getLatitude()!= 0)&& (ndtLocation.GPSLastKnownLocation.getLongitude()!= 0)){
+					latitude = formatGPSCoordinate(ndtLocation.GPSLastKnownLocation.getLatitude());
+					longitude = formatGPSCoordinate(ndtLocation.GPSLastKnownLocation.getLongitude());
+				}else{
+					if ((ndtLocation.NetworkLastKnownLocation != null) && (ndtLocation.NetworkLastKnownLocation.getLatitude()!= 0)&& (ndtLocation.NetworkLastKnownLocation.getLongitude()!= 0)){
+						latitude = formatGPSCoordinate(ndtLocation.NetworkLastKnownLocation.getLatitude());
+						longitude = formatGPSCoordinate(ndtLocation.NetworkLastKnownLocation.getLongitude());
+					}
+				}
+			}
+
+		}
+		history = new History(newDate,upload,download,latency,jitter,
+				networkType,connectionType,latitude,longitude);
+		}catch (Exception e){
+		}
+		return(history);
 	}
 
 	private void setupResultsObjects() {
@@ -651,7 +849,7 @@ public class StandardTest implements Runnable {
 			uiServices.clearProcessHandle();
 			return (RUNCOMMAND_SUCCESS);
 
-		} else if (program.equals("Iperf UDP Wait")) { // Not Used--superceded
+		} else if (program.equals("Iperf UDP Wait")) { // Not Used--superseded
 														// by RunCommandUDPWait
 			uiServices.setCurrentTask("Iperf");
 			int udpSeconds;
@@ -713,7 +911,9 @@ public class StandardTest implements Runnable {
 							+ Constants.PING_TIMEOUT / 1000 + " seconds.\n");
 					statistics.append("\nPing timed out after "
 							+ Constants.PING_TIMEOUT / 1000 + " seconds.\n");
-					pingTest.SetPingFail("Test Timed Out.");
+					if(pingTest != null){
+						pingTest.SetPingFail("Test Timed Out.");
+					}
 				}
 			} catch (InterruptedException e) {
 				if (program.equals("Ping Quick Test")) {

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="400dp">
+	
+	<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="left">
+        
+		<ImageView
+		    android:id="@+id/Down"
+            android:layout_weight="1"
+		    android:layout_width="0dip"
+		    android:layout_height="25dp"
+		    android:src="@drawable/fixed"/>
+		
+	</LinearLayout>
+		
+	<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_gravity="left">
+		
+		<TextView
+		    android:id="@+id/ServiceName"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center"
+		    android:text="Advertised Fixed"
+		    android:textSize="12sp" />
+		
+	</LinearLayout>
+	
+</LinearLayout>

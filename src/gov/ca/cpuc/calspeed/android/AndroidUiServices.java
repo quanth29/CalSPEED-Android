@@ -1,20 +1,20 @@
-// Original work: Copyright 2009 Google Inc. All Rights Reserved.
-//
-// Modified work: The original source code comes from the NDT Android app
-//                that is available from http://code.google.com/p/ndt/.
-//                It's modified for the CalSPEED Android app by California 
-//                State University Monterey Bay (CSUMB) on April 29, 2013.
-//
+/* Original work: Copyright 2009 Google Inc. All Rights Reserved.
+ 
+   Modified work: The original source code (AndroidNdt.java) comes from the NDT Android app
+                  that is available from http://code.google.com/p/ndt/.
+                  It's modified for the CalSPEED Android app by California 
+                  State University Monterey Bay (CSUMB) on April 29, 2013.
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
 import gov.ca.cpuc.calspeed.android.UiServices;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import gov.ca.cpuc.calspeed.android.R;
 
 /**
  * Implementation of UiServices for Android.
@@ -164,24 +164,24 @@ public class AndroidUiServices implements UiServices {
   public void logError(String str) {
     Log.e("debug", str);
   }
-//Sets handle of current executing process
- /**
-  * {@inheritDoc}
-  */
+  //Sets handle of current executing process
+  /**
+   * {@inheritDoc}
+   */
 
- public void setProcessHandle(Process process) {
-	 message = handler.obtainMessage(Constants.THREAD_SET_PROCESS_HANDLE,process);
-     handler.sendMessage(message);
- }
-//Unimplemented (and unnecessary Applet-specific) methods below
-/**
- * {@inheritDoc}
- */
+  public void setProcessHandle(Process process) {
+	  message = handler.obtainMessage(Constants.THREAD_SET_PROCESS_HANDLE,process);
+      handler.sendMessage(message);
+  }
+  //Unimplemented (and unnecessary Applet-specific) methods below
+  /**
+   * {@inheritDoc}
+   */
 
-public void clearProcessHandle() {
-	message = handler.obtainMessage(Constants.THREAD_CLEAR_PROCESS_HANDLE);
-    handler.sendMessage(message);
-}
+  public void clearProcessHandle() {
+	  message = handler.obtainMessage(Constants.THREAD_CLEAR_PROCESS_HANDLE);
+      handler.sendMessage(message);
+  }
 
   // Unimplemented (and unnecessary Applet-specific) methods below
   /**
@@ -287,7 +287,7 @@ public void setResults(int constant, String text, String number, boolean redText
 	message = handler.obtainMessage(constant);
 	Bundle messageData = new Bundle();
 	messageData.putString("text", text);
-	messageData.putString("number", number);
+	messageData.putString("number", number.replace(",", "."));
 	messageData.putBoolean("redText", redText);
 	messageData.putBoolean("numbersHidden", numbersHidden);
 	message.setData(messageData);
@@ -322,7 +322,7 @@ public void setUploadNumber(String number) {
 	if (Constants.UploadDebug)
 		Log.v("debug","in setUploadNumber number="+number);
 	Bundle messageData = new Bundle();
-	messageData.putString("number", number);
+	messageData.putString("number", number.replace(",", "."));
 	message.setData(messageData);
 	handler.sendMessage(message);
 }
@@ -331,7 +331,7 @@ public void setUploadNumberStopTimer(String number) {
 	if (Constants.UploadDebug)
 		Log.v("debug","in stop Upload Timer number="+number);
 	Bundle messageData = new Bundle();
-	messageData.putString("number", number);
+	messageData.putString("number", number.replace(",", "."));
 	message.setData(messageData);
 	handler.sendMessage(message);
 }
@@ -351,7 +351,7 @@ public void setDownloadNumber(String number) {
 	message = handler.obtainMessage(Constants.THREAD_SET_DOWNLOAD_NUMBER);
 	
 	Bundle messageData = new Bundle();
-	messageData.putString("number", number);
+	messageData.putString("number", number.replace(",", "."));
 	message.setData(messageData);
 	handler.sendMessage(message);
 }
@@ -359,7 +359,7 @@ public void setDownloadNumberStopTimer(String number) {
 	message = handler.obtainMessage(Constants.THREAD_SET_DOWNLOAD_NUMBER_STOP_TIMER);
 	
 	Bundle messageData = new Bundle();
-	messageData.putString("number", number);
+	messageData.putString("number", number.replace(",", "."));
 	message.setData(messageData);
 	handler.sendMessage(message);
 }

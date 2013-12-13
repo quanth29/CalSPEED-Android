@@ -9,7 +9,7 @@ modification, are permitted provided that the following conditions are met:
        this list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above
-	   copyright notice, this list of conditions and the following disclaimer in the
+           copyright notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
     3. Neither the name of the CPUC, CSU Monterey Bay, nor the names of
@@ -26,13 +26,13 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
 /**
  *
- * @author California State University Monterery Bay ITCD
+ * @author California State University Monterey Bay ITCD
  */
 
 import android.util.Log;
@@ -53,7 +53,7 @@ public class SecureFileTransfer {
 
     SecureFileTransfer(String username, String password, String host, String khfile, String identityfile,
             String filename,String sourcepath,String destpath)
-{
+    {
 
         this.username = username;
         this.host = host;
@@ -80,7 +80,7 @@ public class SecureFileTransfer {
             
            
            
-            session.setPassword("");
+            session.setPassword("NetworkBBD4CPUC");
  
             session.setConfig("StrictHostKeyChecking", "no"); 
 

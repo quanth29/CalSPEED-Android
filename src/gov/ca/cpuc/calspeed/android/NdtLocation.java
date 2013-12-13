@@ -1,10 +1,10 @@
-// Original work: Copyright 2009 Google Inc. All Rights Reserved.
-//
-// Modified work: The original source code comes from the NDT Android app
-//                that is available from http://code.google.com/p/ndt/.
-//                No modification by the CalSPEED Android app by California 
-//                State University Monterey Bay (CSUMB) in this file.
-//
+/* Original work: Copyright 2009 Google Inc. All Rights Reserved.
+ 
+   Modified work: The original source code (AndroidNdt.java) comes from the NDT Android app
+                  that is available from http://code.google.com/p/ndt/.
+                  It's modified for the CalSPEED Android app by California 
+                  State University Monterey Bay (CSUMB) on April 29, 2013.
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
@@ -18,11 +18,11 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
-import gov.ca.cpuc.calspeed.android.Calspeed;
-import gov.ca.cpuc.calspeed.android.UiServices;
+
+import gov.ca.cpuc.calspeed.android.CalspeedFragment.LatLong;
+import gov.ca.cpuc.calspeed.android.CalspeedFragment.NetworkLatLong;
 
 import java.util.Iterator;
-
 
 /**
  * Handle the location related functions and listeners.
@@ -32,12 +32,19 @@ public class NdtLocation implements LocationListener {
    * Location variable, publicly accessible to provide access to geographic data.
    */
   public Location location;
+  public Location networkLocation;
   public LocationManager locationManager;
   private Criteria criteria;
   public String bestProvider;
   public Boolean gpsEnabled;
-  private Calspeed context;
+  public Boolean networkEnabled;
+  private Context context;
   private AndroidUiServices uiServices;
+  public Location NetworkLastKnownLocation;
+  public Location GPSLastKnownLocation;
+  public NetworkLatLong networkLatLong;
+  public LatLong latLongptr;
+ 
 
 
   /**
@@ -45,12 +52,18 @@ public class NdtLocation implements LocationListener {
    * 
    * @param context context which is currently running
    */
-  public NdtLocation(Calspeed context,AndroidUiServices uiServices) {
+  public NdtLocation(Context context,AndroidUiServices uiServices,NetworkLatLong networkLatLong,
+		  LatLong latLongptr) {
 	this.context = context;
 	this.uiServices = uiServices;
+	this.networkLatLong = networkLatLong;
+	this.latLongptr = latLongptr;
     locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     Iterator<String> providers = locationManager.getAllProviders().iterator();
     location = null;
+    networkLocation = new Location(LocationManager.NETWORK_PROVIDER);
+    networkLocation.setLatitude(0.0);
+    networkLocation.setLongitude(0.0);
     while(providers.hasNext()) {
         Log.v("debug", providers.next());
     }
@@ -62,7 +75,7 @@ public class NdtLocation implements LocationListener {
     bestProvider = locationManager.getBestProvider(criteria, true);
     Log.v("debug","Best provider is:"+ bestProvider);
     addGPSStatusListener();
-    
+    addNetworkListener();
   }
   public void addGPSStatusListener(){
 	 if (locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER)){ 
@@ -79,6 +92,41 @@ public class NdtLocation implements LocationListener {
 		  gpsEnabled = false;
 	  }
   }
+  public void addNetworkListener(){
+	  if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+		  locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0, NetworkLocationListener);
+		  networkEnabled = true;
+	  }else{
+		  networkEnabled = false;
+	  }
+  }
+  public void stopNetworkListenerUpdates(){
+	  if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+		  locationManager.removeUpdates(NetworkLocationListener);
+		  networkEnabled = false;
+	  }
+  }
+  public void startNetworkListenerUpdates(){
+	  if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+		  locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0, NetworkLocationListener);
+		  networkEnabled = true;
+	  }
+  }
+  //Define a listener that responds to Network location updates
+  LocationListener NetworkLocationListener = new LocationListener() {
+    public void onLocationChanged(Location location) {
+ 	
+	    networkLatLong.updateNetworkLatitudeLongitude(location);
+	    networkLocation.set(location);
+    }
+ 
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+ 
+    public void onProviderEnabled(String provider) {}
+ 
+    public void onProviderDisabled(String provider) {}
+  };
+
   private final GpsStatus.Listener onGpsStatusChange=new GpsStatus.Listener()
   {
           public void onGpsStatusChanged(int event)
@@ -88,7 +136,7 @@ public class NdtLocation implements LocationListener {
                           case GpsStatus.GPS_EVENT_STARTED:
                                   // Started...
                         	  	startListen();
-                        	  	context.updateLatitudeLongitude();
+                        	  	latLongptr.updateLatitudeLongitude();
                         	  	if (Constants.DEBUG)
                         	  		Log.v("debug","GPS starting...\n");
                                   break ;
@@ -96,13 +144,13 @@ public class NdtLocation implements LocationListener {
                                   // First Fix...
                         	  if (Constants.DEBUG)
                         		  Log.v("debug","GPS first fix \n");
-                        	  context.updateLatitudeLongitude();
+                        	  latLongptr.updateLatitudeLongitude();
                                   break ;
                           case GpsStatus.GPS_EVENT_STOPPED:
                                   // Stopped...
                         	  stopListen();
                         	  location = null;
-                        	  context.updateLatitudeLongitude();
+                        	  latLongptr.updateLatitudeLongitude();
                         	  if (Constants.DEBUG)
                         		  Log.v("debug","GPS stopped.\n");
                                   break ;
@@ -124,32 +172,21 @@ public class NdtLocation implements LocationListener {
 
   @Override
   public void onLocationChanged(Location location) {
-	  float distance = 0;
-	  if (this.location != null){
-	    	distance = location.distanceTo(this.location); 		    	
-	  }
-	  String locInfo = String.format("Current location = (%f,%f)\n",
-	  	location.getLatitude(),location.getLongitude());
 	  this.location = location;
-	  context.updateLatitudeLongitude();
-	  context.updateLatLongDisplay();
-	  locInfo += String.format("\n Distance from last = %f meters \n",distance);
-	  if (Constants.DEBUG)
-		  Log.v("debug",locInfo);
-	  
+	  latLongptr.updateLatitudeLongitude();
 
   }
  @Override
   public void onProviderDisabled(String provider) {
     stopListen();
     location = null;
-    context.updateLatitudeLongitude();
+    latLongptr.updateLatitudeLongitude();
   }
 
  @Override
   public void onProviderEnabled(String provider) {
     startListen();
-    context.updateLatitudeLongitude();
+    latLongptr.updateLatitudeLongitude();
   }
  @Override
   public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -186,7 +223,7 @@ public class NdtLocation implements LocationListener {
    * Begins to request the location update.
    */
   public void startListen() {
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
         this);
   }
 }

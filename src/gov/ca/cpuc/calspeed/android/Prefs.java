@@ -9,7 +9,7 @@ modification, are permitted provided that the following conditions are met:
        this list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above
-	   copyright notice, this list of conditions and the following disclaimer in the
+           copyright notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
     3. Neither the name of the CPUC, CSU Monterey Bay, nor the names of
@@ -26,11 +26,10 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 package gov.ca.cpuc.calspeed.android;
 
-import gov.ca.cpuc.calspeed.android.R;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.content.Context;
@@ -52,11 +51,11 @@ public class Prefs extends PreferenceActivity {
 	CharSequence[] entry_values;
 	Context mycontext;
 
-   @Override
+@SuppressWarnings("deprecation")
+@Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.settings);
-      //get the specified preferences using the key declared in preferences.xml
       
       try{
       mycontext = createPackageContext("gov.ca.cpuc.calspeed.android", 0);
