@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gov.ca.cpuc.calspeed.android"
-    android:versionCode="5"
-    android:versionName="1.2" >
+    android:versionCode="6"
+    android:versionName="1.2.1" >
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -33,7 +33,8 @@
             android:name="gov.ca.cpuc.calspeed.android.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="nosensor"
-            android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.Sherlock" 
+            android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -69,6 +70,6 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="Place your Google Maps v2 API key here" /> 
-    </application>
+           </application>
 
 </manifest>

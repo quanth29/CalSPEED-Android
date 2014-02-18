@@ -80,7 +80,7 @@ public class SecureFileTransfer {
             
            
            
-            session.setPassword("NetworkBBD4CPUC");
+            session.setPassword("");
  
             session.setConfig("StrictHostKeyChecking", "no"); 
 

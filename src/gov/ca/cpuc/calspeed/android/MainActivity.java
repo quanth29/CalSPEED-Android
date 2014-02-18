@@ -121,7 +121,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			
 			AlertDialog dialog = builder.create();
 			if(actionbar.getSelectedTab()==viewerTab){
-				dialog.setTitle("About Map View (v1.2)");
+				dialog.setTitle("About Map View (v1.2.1)");
 				TextView viewerHelp = new TextView(this);
 				viewerHelp.setText(Html.fromHtml(this.getString(R.string.about_text_viewer)));
 				viewerHelp.setMovementMethod(LinkMovementMethod.getInstance());
@@ -133,7 +133,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			else{
 				// Setting Dialog Title
-				dialog.setTitle("About CalSPEED (v1.2)");
+				dialog.setTitle("About CalSPEED (v1.2.1)");
 				// Setting Dialog Message
 				TextView viewerHelp = new TextView(this);
 				viewerHelp.setText(Html.fromHtml(this.getString(R.string.about_text)));
@@ -183,6 +183,12 @@ public class MainActivity extends SherlockFragmentActivity {
 	    	actionbar.addTab(viewerTab, 2, false);
 	    }
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    moveTaskToBack(true);
+	}
+	
 	
 	class MainTabsListener implements ActionBar.TabListener {
 		public Fragment fragment;

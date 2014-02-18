@@ -236,7 +236,7 @@ public class SaveResults{
 				String jschUsername = "";
 				String deviceDir = "";
 				if (!filename.matches("")){
-						jschUsername = "";
+						jschUsername = "username";
 						deviceDir = "./UploadData/";
 					
 					SecureFileTransfer sf = new SecureFileTransfer(jschUsername,

@@ -146,7 +146,7 @@ public class Constants {
   public static final String SERVER_NAME[] =
       {"Iperf server 1", "Iperf server 2"};
   public static final String SERVER_HOST[] =
-     {"127.0.0.1", "127.0.0.1"}; // Update to two Iperf servers
+     {"127.0.0.1", "127.0.0.1"};//Update to two iPerf servers
  
   public static final String ports[] =
 	  {"5001", "5002", "5003", "5004", "5005", "5006", "5007", "5008", "5009", "5010"};

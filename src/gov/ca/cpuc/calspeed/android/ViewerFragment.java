@@ -32,7 +32,12 @@ package gov.ca.cpuc.calspeed.android;
 
 import gov.ca.cpuc.calspeed.android.AddressCandidates.Candidates;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +88,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class ViewerFragment extends SherlockFragment implements
 		OnMapLongClickListener, OnInfoWindowClickListener {
@@ -210,12 +217,26 @@ public class ViewerFragment extends SherlockFragment implements
 				} catch (UnsupportedEncodingException e1) {
 					e1.printStackTrace();
 				}
-
+				
+				/*
 				URLXY = "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_NA_10/"
 						+ "GeocodeServer/findAddressCandidates?Address=&City=&State=&Zip=&Zip4=&Country=&"
 						+ "SingleLine="
 						+ request
 						+ "&outFields=*&outSR=102113&f=pjson";
+				*/
+				/*
+				URLXY = "http://maps.googleapis.com/maps/api/geocode/json?address="
+						+ request
+						+ "&sensor=false";
+				*/
+				
+				/*
+				URLXY = "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Locators/ESRI_Geocode_USA/"
+						+ "GeocodeServer/findAddressCandidates?Address="
+						+ request 
+						+ "&outFields=&outSR=&f=pjson";
+
 
 				try {
 					addrCandidate = new GetAddressCandidates(getActivity())
@@ -235,6 +256,61 @@ public class ViewerFragment extends SherlockFragment implements
 				}
 
 				return true;
+				*/
+				
+				Gson gson = new Gson();
+				GoogleGeoCodeResponse result;
+				try {
+					result = gson.fromJson(jsonCoord(request),GoogleGeoCodeResponse.class);
+					
+					//if not address is found
+					if(!result.status.equalsIgnoreCase("OK"))
+					{
+						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+						builder.setMessage(
+								"Sorry, that address was not found. Please try enterting a more complete address in California.")
+								.setCancelable(false)
+								.setPositiveButton("Okay",
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog, int id) {
+
+												dialog.cancel();
+											}
+										});
+						AlertDialog alert = builder.create();
+						alert.show();
+						
+						return true;
+					}
+					double lat = Double.parseDouble(result.results[0].geometry.location.lat);
+
+					double lng = Double.parseDouble(result.results[0].geometry.location.lng);
+					
+					String formatAddress = result.results[0].formatted_address;
+					
+					target = new LatLng(lat,lng);
+					
+					try {
+						drawSearchResult(formatAddress);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} catch (JsonSyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				
+				return true;
+				//try {
+				//	drawSearchResult(formatAddress);
+				//} catch (InterruptedException e) {
+				//	e.printStackTrace();
+				//}
 			}
 		});
 
@@ -243,7 +319,21 @@ public class ViewerFragment extends SherlockFragment implements
 		mMap.setOnInfoWindowClickListener(this);
 
 	}
-    	
+    
+	//added for temporary Google Geocode
+	private String jsonCoord(String address) throws IOException {
+		   URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&components=administrative_area:CA|country:US&sensor=false");
+		   URLConnection connection = url.openConnection();
+		   BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		   String inputLine;
+		   String jsonResult = "";
+		   while ((inputLine = in.readLine()) != null) {
+		      jsonResult += inputLine;
+		   }
+		   in.close();
+		   return jsonResult; 
+	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -263,8 +353,10 @@ public class ViewerFragment extends SherlockFragment implements
 		return myview;
 	}
 
-	public void drawSearchResult(final List<Candidates> list)
+	//public void drawSearchResult(final List<Candidates> list)
+	public void drawSearchResult(String googleAddress)
 			throws InterruptedException {
+		/*
 		ArrayList<String> SpinnerArray = new ArrayList<String>();
 		final ArrayList<Integer> builderIndex = new ArrayList<Integer>();
 
@@ -375,10 +467,20 @@ public class ViewerFragment extends SherlockFragment implements
 				marker.showInfoWindow();
 			}
 		});
-
+		
 		AlertDialog alert = builder.create();
 		alert.show();
+        */
+		
+		// Put the selected address on the center of the map.
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(target, 12));
 
+		marker = mMap.addMarker(new MarkerOptions().position(target));
+		address = googleAddress.replace(", USA", "");;
+		marker.setSnippet(address);
+		marker.setTitle("Selected Location:");
+		marker.showInfoWindow();
+		
 		return;
 	}
 
@@ -537,7 +639,7 @@ public class ViewerFragment extends SherlockFragment implements
 							String lngVal = String.valueOf(target.longitude);
 							reverseGeo = "";
 							try {
-								reverseGeo = "Place mapquest API key here"
+								reverseGeo = "http://www.mapquestapi.com/geocoding/v1/reverse?key=TYPEYOURKEYHERE"
 								   + URLEncoder.encode("{location:{latLng:{lat:", "UTF-8") 
 								   + URLEncoder.encode(latVal, "UTF-8")
 								   + ",lng:"
